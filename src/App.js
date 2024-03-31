@@ -4,11 +4,13 @@ import logo from './logo.svg';
 import './App.css';
 import {useState} from "react";
 import data from './data';
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
+import Detail from './routes/Detail.js'
 
 function App() {
 
     let [shoes] = useState(data)
+    let navigate = useNavigate()
 
   return (
     <div className="App">
@@ -17,18 +19,48 @@ function App() {
             <Container>
                 <Navbar.Brand href="#home">Shop</Navbar.Brand>
                 <Nav className="me-auto">
-                    <Nav.Link href="#home"><Link to={"/"}>Home</Link></Nav.Link>
-                    <Nav.Link href="#features"><Link to={"/detail"}>Detail</Link></Nav.Link>
+                    <Nav.Link onClick={() => { navigate('/')}}>Home</Nav.Link>
+                    <Nav.Link onClick={() => { navigate('/detail')}}>Detail</Nav.Link>
+                    <Nav.Link onClick={() => { navigate('/event')}}>Event</Nav.Link>
+                    <Nav.Link onClick={() => { navigate('/about')}}>About</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>
 
         <Routes>
-            <Route path="/" element={<Home shoes={shoes}></Home>}/>
-            <Route path="/detail" element={<Detail></Detail>}/>
+            <Route path="/" element={<Home shoes={shoes} />}/>
+            <Route path="/detail" element={<Detail />}/>
+            <Route path="/event" element={<Event />}>
+                <Route path="one" element={<div>event one1</div>}/>
+                <Route path="two" element={<div>event two2</div>}/>
+            </Route>
+            <Route path="/about" element={<About />}>
+                <Route path="member" element={<div>member</div>}/>
+                <Route path="location" element={<div>location</div>}/>
+            </Route>
+            <Route path="*" element={<div>404 NOT FOUND</div>}/>
         </Routes>
     </div>
   );
+}
+
+function Event() {
+    return (
+        <div>
+            <h4>오늘의 이벤트</h4>
+            <Outlet></Outlet>
+            <span><Link to={"/event/one"}>1</Link> <Link to={"/event/two"}>2</Link></span>
+        </div>
+    )
+}
+
+function About() {
+    return (
+        <div>
+            <h4>회사 정보</h4>
+            <Outlet></Outlet>
+        </div>
+    )
 }
 
 function Home(props) {
@@ -44,24 +76,6 @@ function Home(props) {
                             )
                         })
                     }
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function Detail() {
-    return (
-        <div className="container">
-            <div className="row">
-                <div className="col-md-6">
-                    <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%"/>
-                </div>
-                <div className="col-md-6">
-                    <h4 className="pt-5">상품명</h4>
-                    <p>상품설명</p>
-                    <p>120000원</p>
-                    <button className="btn btn-danger">주문하기</button>
                 </div>
             </div>
         </div>

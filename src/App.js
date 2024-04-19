@@ -6,10 +6,12 @@ import {useState} from "react";
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
+import axios from 'axios';
 
 function App() {
 
-    let [shoes] = useState(data)
+    let [shoes, setShoes] = useState(data)
+    let [count, setCount] = useState(2);
     let navigate = useNavigate()
 
   return (
@@ -28,7 +30,8 @@ function App() {
         </Navbar>
 
         <Routes>
-            <Route path="/" element={<Home shoes={shoes} />}/>
+            <Route path="/" element={<Home shoes={shoes} setShoes={setShoes}
+                                           count={count} setCount={setCount}/>}/>
             <Route path="/detail/:id" element={<Detail shoes={shoes} />}/>
             <Route path="/event" element={<Event />}>
                 <Route path="one" element={<div>event one1</div>}/>
@@ -70,14 +73,30 @@ function Home(props) {
             <div className="container">
                 <div className="row">
                     {
-                        props.shoes.map((a, i) => {
+                        props.shoes.map((shoe, i) => {
                             return (
-                                <Card shoes={props.shoes[i]} i={i}></Card>
+                                <Card key={shoe.id} shoes={shoe} i={i}></Card>
                             )
                         })
                     }
                 </div>
             </div>
+            {
+                props.count !== 4
+                    ? <button onClick={() => {
+                        props.setCount(props.count + 1);
+                        axios.get(`https://codingapple1.github.io/shop/data${props.count}.json`)
+                            .then((res) => {
+                                console.log(res.data);
+                                let copy = [...props.shoes, ...res.data];
+                                props.setShoes(copy);
+                            })
+                            .catch(() => {
+                                console.log('실패함')
+                            })
+                    }}>더보기</button>
+                    : null
+            }
         </div>
     )
 }

@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import styled from 'styled-components'
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Button, Navbar, Container, Nav} from 'react-bootstrap'
+
+import {Context1} from './../App'
 
 
 let YelloBtn = styled.button`
@@ -17,6 +19,8 @@ let Box = styled.div`
 
 
 function Detail(props) {
+
+    let { stock } = useContext(Context1);
 
     let [count, setCount] = useState(0);
     let [alerts, setAlerts] = useState(true);
@@ -81,7 +85,7 @@ function Detail(props) {
                     <Nav.Link onClick={()=>{ setTab(2) }} eventKey="link2">버튼2</Nav.Link>
                 </Nav.Item>
             </Nav>
-            <TabContent tab = {tab}></TabContent>
+            <TabContent shoes = {props.shoes} tab = {tab}></TabContent>
 
         </div>
     )
@@ -90,6 +94,7 @@ function Detail(props) {
 function TabContent(props) {
 
     let [fade, setFade] = useState('');
+    let { stock } = useContext(Context1);
 
     useEffect(() => {
         let a= setTimeout(() => { setFade('end') }, 100)
@@ -101,7 +106,7 @@ function TabContent(props) {
 
     return(
         <div className={`start ${fade}`}>
-            { [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.tab] }
+            { [ <div>{stock}</div>, <div>내용1</div>, <div>내용2</div> ][props.tab] }
         </div>
     )
 }

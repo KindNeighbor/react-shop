@@ -2,16 +2,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button, Navbar, Container, Nav} from 'react-bootstrap'
 import logo from './logo.svg';
 import './App.css';
-import {useState} from "react";
+import {createContext, useState} from "react";
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
 import axios from 'axios';
 
+export let Context1 = createContext();
+
 function App() {
 
     let [shoes, setShoes] = useState(data)
     let [count, setCount] = useState(2);
+    let [stock, setStock] = useState([10, 11, 12])
     let navigate = useNavigate()
 
   return (
@@ -32,7 +35,11 @@ function App() {
         <Routes>
             <Route path="/" element={<Home shoes={shoes} setShoes={setShoes}
                                            count={count} setCount={setCount}/>}/>
-            <Route path="/detail/:id" element={<Detail shoes={shoes} />}/>
+            <Route path="/detail/:id" element={
+                <Context1.Provider value={{ stock, shoes }}>
+                    <Detail shoes={shoes} />
+                </Context1.Provider>} >
+            </Route>
             <Route path="/event" element={<Event />}>
                 <Route path="one" element={<div>event one1</div>}/>
                 <Route path="two" element={<div>event two2</div>}/>

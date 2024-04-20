@@ -23,11 +23,12 @@ let stock = createSlice({
 
 let cart = createSlice({
     name: "cart",
-    initialState: [{
-        id: 0,
-        name: "White and Black",
-        count: 2
-    },
+    initialState: [
+        {
+            id: 0,
+            name: "White and Black",
+            count: 2
+        },
 
         {
             id : 2,
@@ -41,7 +42,12 @@ let cart = createSlice({
             state[id].count += 1;
         },
         addItem(state, action) {
-            state.push(action.payload);
+            let id = state.findIndex((item) => { return item.id === action.payload.id })
+            if (id !== -1) {
+                state[id].count += 1;
+            } else {
+                state.push(action.payload);
+            }
         }
     }
 })

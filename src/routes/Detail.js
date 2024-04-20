@@ -73,9 +73,9 @@ function Detail(props) {
                     <p>{product.price} 원</p>
                     <button className="btn btn-danger" onClick={() => {
                         let newItem = {
-                            id : id,
+                            id : product.id,
                             name : product.title,
-                            count : 2
+                            count : 1
                         }
                         dispatch(addItem(newItem));
                     }}>주문하기</button>

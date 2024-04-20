@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import styled from 'styled-components'
 import {useEffect, useState} from "react";
+import {Button, Navbar, Container, Nav} from 'react-bootstrap'
 
 
 let YelloBtn = styled.button`
@@ -14,15 +15,25 @@ let Box = styled.div`
   background : grey
 `;
 
+
 function Detail(props) {
 
     let [count, setCount] = useState(0);
     let [alerts, setAlerts] = useState(true);
     let [num, setNum] = useState('');
+    let [tab, setTab] = useState(0);
 
     let {id} = useParams();
     let changeId = parseInt(id) + 1;
     let product = props.shoes.find(x => x.id == id);
+    let [fade2, setFade2] = useState('');
+
+    useEffect(() => {
+        setFade2('end')
+        return () => {
+            setFade2('')
+        }
+    }, []);
 
 
     useEffect(() => {
@@ -36,7 +47,7 @@ function Detail(props) {
     }, [num])
 
     return (
-        <div className="container">
+        <div className={`container start ` + fade2}>
             {
                 alerts == true
                     ? <div className="alert alert-warning">
@@ -58,6 +69,39 @@ function Detail(props) {
                     <button className="btn btn-danger">주문하기</button>
                 </div>
             </div>
+
+            <Nav variant="tabs"  defaultActiveKey="link0">
+                <Nav.Item>
+                    <Nav.Link onClick={()=>{ setTab(0) }} eventKey="link0">버튼0</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link onClick={()=>{ setTab(1) }} eventKey="link1">버튼1</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link onClick={()=>{ setTab(2) }} eventKey="link2">버튼2</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            <TabContent tab = {tab}></TabContent>
+
+        </div>
+    )
+}
+
+function TabContent(props) {
+
+    let [fade, setFade] = useState('');
+
+    useEffect(() => {
+        let a= setTimeout(() => { setFade('end') }, 100)
+        return () => {
+            clearTimeout(a);
+            setFade('')
+        }
+    }, [props.tab])
+
+    return(
+        <div className={`start ${fade}`}>
+            { [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.tab] }
         </div>
     )
 }

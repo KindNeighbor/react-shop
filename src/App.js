@@ -6,9 +6,10 @@ import {createContext, useState} from "react";
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
+import Cart from './routes/Cart.js'
 import axios from 'axios';
 
-export let Context1 = createContext();
+// export let Context1 = createContext();
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
                     <Nav.Link onClick={() => { navigate('/detail')}}>Detail</Nav.Link>
                     <Nav.Link onClick={() => { navigate('/event')}}>Event</Nav.Link>
                     <Nav.Link onClick={() => { navigate('/about')}}>About</Nav.Link>
+                    <Nav.Link onClick={() => { navigate('/cart')}}>Cart</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>
@@ -35,11 +37,8 @@ function App() {
         <Routes>
             <Route path="/" element={<Home shoes={shoes} setShoes={setShoes}
                                            count={count} setCount={setCount}/>}/>
-            <Route path="/detail/:id" element={
-                <Context1.Provider value={{ stock, shoes }}>
-                    <Detail shoes={shoes} />
-                </Context1.Provider>} >
-            </Route>
+            <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+            <Route path="/cart" element={<Cart/>}/>
             <Route path="/event" element={<Event />}>
                 <Route path="one" element={<div>event one1</div>}/>
                 <Route path="two" element={<div>event two2</div>}/>

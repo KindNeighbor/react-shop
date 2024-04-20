@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import styled from 'styled-components'
-import {useContext, useEffect, useState} from "react";
-import {Button, Navbar, Container, Nav} from 'react-bootstrap'
+import { useEffect, useState } from "react";
+import { Nav } from 'react-bootstrap'
+import { addItem } from "../store/userSlice";
+import {useDispatch} from "react-redux";
 
-import {Context1} from './../App'
+// import {Context1} from './../App'
 
 
 let YelloBtn = styled.button`
@@ -20,8 +22,6 @@ let Box = styled.div`
 
 function Detail(props) {
 
-    let { stock } = useContext(Context1);
-
     let [count, setCount] = useState(0);
     let [alerts, setAlerts] = useState(true);
     let [num, setNum] = useState('');
@@ -31,6 +31,7 @@ function Detail(props) {
     let changeId = parseInt(id) + 1;
     let product = props.shoes.find(x => x.id == id);
     let [fade2, setFade2] = useState('');
+    let dispatch = useDispatch();
 
     useEffect(() => {
         setFade2('end')
@@ -70,7 +71,14 @@ function Detail(props) {
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price} 원</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <button className="btn btn-danger" onClick={() => {
+                        let newItem = {
+                            id : id,
+                            name : product.title,
+                            count : 2
+                        }
+                        dispatch(addItem(newItem));
+                    }}>주문하기</button>
                 </div>
             </div>
 
@@ -94,19 +102,18 @@ function Detail(props) {
 function TabContent(props) {
 
     let [fade, setFade] = useState('');
-    let { stock } = useContext(Context1);
 
     useEffect(() => {
         let a= setTimeout(() => { setFade('end') }, 100)
         return () => {
             clearTimeout(a);
-            setFade('')
+            setFade('');
         }
     }, [props.tab])
 
     return(
         <div className={`start ${fade}`}>
-            { [ <div>{stock}</div>, <div>내용1</div>, <div>내용2</div> ][props.tab] }
+            { [ <div>{props.shoes[0].title}</div>, <div>내용1</div>, <div>내용2</div> ][props.tab] }
         </div>
     )
 }

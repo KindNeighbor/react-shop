@@ -29,7 +29,7 @@ function Detail(props) {
 
     let {id} = useParams();
     let changeId = parseInt(id) + 1;
-    let product = props.shoes.find(x => x.id == id);
+    let product = props.shoes.find(x => x.id.toString() === id);
     let [fade2, setFade2] = useState('');
     let dispatch = useDispatch();
 
@@ -43,7 +43,7 @@ function Detail(props) {
 
     useEffect(() => {
         let a = setTimeout(() => { setAlerts(false) }, 2000)
-        if (isNaN(num) == true) {
+        if (isNaN(num) === true) {
             alert('숫자만 입력해주세요');
         }
         return () => {
@@ -51,10 +51,20 @@ function Detail(props) {
         }
     }, [num])
 
+    useEffect(() => {
+        let a = localStorage.getItem('watched');
+        a = JSON.parse(a);
+        a.push(product.id);
+
+        a = new Set(a);
+        a = Array.from(a);
+        localStorage.setItem('watched', JSON.stringify(a));
+    },[])
+
     return (
         <div className={`container start ` + fade2}>
             {
-                alerts == true
+                alerts === true
                     ? <div className="alert alert-warning">
                         2초 이내 구매시 할인
                     </div>

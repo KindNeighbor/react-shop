@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button, Navbar, Container, Nav} from 'react-bootstrap'
 import logo from './logo.svg';
 import './App.css';
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
@@ -17,6 +17,12 @@ function App() {
     let [count, setCount] = useState(2);
     let [stock, setStock] = useState([10, 11, 12])
     let navigate = useNavigate()
+
+    useEffect(() => {
+        if (localStorage.getItem('watched') === null) {
+            localStorage.setItem('watched', JSON.stringify([]));
+        }
+    }, []);
 
   return (
     <div className="App">
@@ -108,9 +114,19 @@ function Home(props) {
 }
 
 function Card(props) {
+
+    let navigate = useNavigate();
+
+    function goToDetail() {
+        navigate('/detail/' + props.shoes.id); // 여기서 props.shoes.id는 각 신발의 고유 ID를 가리킵니다.
+    }
+
     return (
         <div className="col-md-4">
-            <img src={`https://codingapple1.github.io/shop/shoes${props.i + 1}.jpg`} width="80%"/>
+            <img src={`https://codingapple1.github.io/shop/shoes${props.i + 1}.jpg`}
+                 width="80%"
+                 onClick={goToDetail}
+                style={{cursor : 'pointer'}}/>
             <h4>{props.shoes.title}</h4>
             <p>{props.shoes.content}</p>
             <p>{props.shoes.price} won</p>
